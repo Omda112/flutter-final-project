@@ -3,6 +3,7 @@ import 'package:firstproject/add_item/item_model.dart';
 import 'package:firstproject/details/details_page/details_screen.dart';
 import 'package:firstproject/add_item/add_item_screen.dart';
 import 'package:firstproject/details/details_widget/details_widget.dart';
+import 'package:firstproject/favorite/favorite_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,7 @@ class DashboardScreen extends StatelessWidget {
 
     final profileImage= Provider.of<UserModel>(context).user?.image;
     final items= Provider.of<ItemModel>(context);
+    final favs= Provider.of<FavoriteModel>(context);
 
     return Scaffold(
       appBar: AppBar(title: Text("Dashboard"),
@@ -28,7 +30,7 @@ class DashboardScreen extends StatelessWidget {
               CircleAvatar(
                 radius: 10,
                 backgroundColor: Colors.grey.shade100,
-                child: Text("${items.items.length}"),
+                child: Text("${favs.fav.length}"),
               )
             ],
           )

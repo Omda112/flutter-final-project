@@ -64,13 +64,31 @@ class _ProfilePageState extends State<ProfilePage> {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               children: [
-                const Text("Name", style: TextStyle(fontSize: 16, color: Colors.grey)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Name", style: TextStyle(fontSize: 16, color: Colors.grey)),
+                    IconButton(
+                      icon: const Icon(Icons.edit, size: 20),
+                      onPressed: () => _editFieldDialog(context, userModel, field: 'name'),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 4),
                 Text(userModel.user?.name ?? "Unknown", style: const TextStyle(fontSize: 20)),
 
                 const SizedBox(height: 20),
 
-                const Text("Email", style: TextStyle(fontSize: 16, color: Colors.grey)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Email", style: TextStyle(fontSize: 16, color: Colors.grey)),
+                    IconButton(
+                      icon: const Icon(Icons.edit, size: 20),
+                      onPressed: () => _editFieldDialog(context, userModel, field: 'email'),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 4),
                 Text(userModel.user?.bio ?? "No Email", style: const TextStyle(fontSize: 20)),
 
@@ -127,6 +145,45 @@ class _ProfilePageState extends State<ProfilePage> {
                   icon: Icons.delete,
                 ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _editFieldDialog(BuildContext context, UserModel userModel, {required String field}) {
+    final TextEditingController controller = TextEditingController(
+      text: field == 'name' ? userModel.user?.name : userModel.user?.bio,
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Edit ${field == 'name' ? 'Name' : 'Email'}'),
+        content: TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: field == 'name' ? 'Name' : 'Email',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final newValue = controller.text.trim();
+              if (newValue.isNotEmpty) {
+                if (field == 'name') {
+                  userModel.updateName(newValue);
+                } else {
+                  userModel.updateEmail(newValue);
+                }
+              }
+              Navigator.pop(context);
+            },
+            child: const Text('Save'),
           ),
         ],
       ),

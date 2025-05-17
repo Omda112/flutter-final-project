@@ -1,8 +1,9 @@
+import 'package:firstproject/user/user_view_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../profile_widget/options.dart';
-import '../user_model.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -14,12 +15,12 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<UserModel>(context, listen: false).loadUserData();
+    Provider.of<UserViewModel>(context, listen: false).loadUserData();
   }
 
   @override
   Widget build(BuildContext context) {
-    final userModel = Provider.of<UserModel>(context);
+    final userModel = Provider.of<UserViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(title: const Text("Profile")),
@@ -59,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -74,10 +75,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
                 Text(userModel.user?.name ?? "Unknown", style: const TextStyle(fontSize: 20)),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,16 +89,18 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
-                Text(userModel.user?.bio ?? "No Email", style: const TextStyle(fontSize: 20)),
+                Text(userModel.user?.email ?? "No Email", style: const TextStyle(fontSize: 20)),
 
                 const SizedBox(height: 40),
 
                 ElevatedButton.icon(
                   onPressed: () => userModel.logout(context),
-                  icon: const Icon(Icons.logout),
-                  label: const Text("Logout"),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  icon: const Icon(Icons.logout , color: Colors.red,),
+                  label: const Text("Logout" ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.red, // 👈 Changes the text & icon color
+                  ),
                 )
               ],
             ),
@@ -108,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildImageOptions(UserModel userModel) {
+  Widget _buildImageOptions(UserViewModel userViewModel) {
     return SizedBox(
       height: 150,
       child: Column(
@@ -120,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               Options(
                 onPressed: () {
-                  userModel.imageSelector(ImageSource.camera);
+                  userViewModel.pickImage(ImageSource.camera);
                   Navigator.pop(context);
                 },
                 title: "Camera",
@@ -128,17 +130,17 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               Options(
                 onPressed: () {
-                  userModel.imageSelector(ImageSource.gallery);
+                  userViewModel.pickImage(ImageSource.gallery);
                   Navigator.pop(context);
                 },
                 title: "Gallery",
                 icon: Icons.image,
               ),
-              if (userModel.user?.image != null)
+              if (userViewModel.user?.image != null)
                 Options(
-                  selectedImage: userModel.user?.image,
+                  selectedImage: userViewModel.user?.image,
                   onPressed: () {
-                    userModel.removeImage();
+                    userViewModel.removeImage();
                     Navigator.pop(context);
                   },
                   title: "Delete",
@@ -151,9 +153,9 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void _editFieldDialog(BuildContext context, UserModel userModel, {required String field}) {
+  void _editFieldDialog(BuildContext context, UserViewModel userModel, {required String field}) {
     final TextEditingController controller = TextEditingController(
-      text: field == 'name' ? userModel.user?.name : userModel.user?.bio,
+      text: field == 'name' ? userModel.user?.name : userModel.user?.email,
     );
 
     showDialog(

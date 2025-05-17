@@ -4,8 +4,7 @@ import 'package:firstproject/add_item/item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ItemModel extends ChangeNotifier{
-
+class ItemModel extends ChangeNotifier {
   final List<Item> _items = [];
   List<Item> get items => _items;
 
@@ -15,34 +14,28 @@ class ItemModel extends ChangeNotifier{
   List<Item> _favorites = [];
   List<Item> get favorites => _favorites;
 
-  void addItem(Item item){
+  void addItem(Item item) {
     _items.add(item);
     notifyListeners();
   }
 
   ImagePicker picker = ImagePicker();
-
   List<File>? selectedImage = [];
-
 
   Future<void> imageSelector() async {
     List<XFile>? images = await picker.pickMultiImage();
-
-    if (images != null ) {
-
-        selectedImage!.addAll(images.map((toElement) => File(toElement.path)).toList());
-
+    if (images != null) {
+      selectedImage!.addAll(images.map((e) => File(e.path)).toList());
     }
     notifyListeners();
   }
 
-  void removeImage(index){
-
-      selectedImage!.removeAt(index);
-      notifyListeners();
+  void removeImage(index) {
+    selectedImage!.removeAt(index);
+    notifyListeners();
   }
 
-  void selectItem(Item item){
+  void selectItem(Item item) {
     _selectedItem = item;
     notifyListeners();
   }
@@ -54,6 +47,12 @@ class ItemModel extends ChangeNotifier{
     } else {
       _favorites.removeWhere((fav) => fav == item);
     }
+    notifyListeners();
+  }
+
+  void removeItem(Item item) {
+    _items.remove(item);
+    _favorites.removeWhere((fav) => fav == item);
     notifyListeners();
   }
 }

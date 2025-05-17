@@ -8,35 +8,31 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../profile/profile_page/profile_screen.dart';
-import '../profile/user_model.dart';
+import '../user/user_view_model.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    final profileImage= Provider.of<UserModel>(context).user?.image;
-    final items= Provider.of<ItemModel>(context);
-    final favs= Provider.of<FavoriteModel>(context);
+    final profileImage = Provider.of<UserViewModel>(context).user?.image;
+    final items = Provider.of<ItemModel>(context);
+    final favs = Provider.of<FavoriteModel>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Dashboard"),
+      appBar: AppBar(
+        title: Text("Dashboard"),
         actions: [
-
           Stack(
             children: [
-              IconButton(onPressed: (){}, icon: Icon(Icons.favorite)),
+              IconButton(onPressed: () {}, icon: Icon(Icons.favorite)),
               CircleAvatar(
                 radius: 10,
                 backgroundColor: Colors.grey.shade100,
                 child: Text("${favs.fav.length}"),
               )
             ],
-          )
-
-          ,
-
+          ),
           IconButton(
             onPressed: () {
               Navigator.push(
@@ -44,52 +40,82 @@ class DashboardScreen extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => ProfilePage()),
               );
             },
-            icon: profileImage==null? Icon(Icons.account_circle_outlined): CircleAvatar(child: ClipOval(child:Image.file(profileImage,
-              height:50 , width: 50,fit: BoxFit.cover,),),),
+            icon: profileImage == null
+                ? Icon(Icons.account_circle_outlined)
+                : CircleAvatar(
+              child: ClipOval(
+                child: Image.file(
+                  profileImage,
+                  height: 50,
+                  width: 50,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
           ),
         ],
       ),
+      body: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 10,
+        ),
+        itemCount: items.items.length,
+        itemBuilder: (context, index) {
+          final item = items.items[index];
 
-      body:GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2 , crossAxisSpacing: 10),
-          itemCount: items.items.length,
-          itemBuilder: (context,index){
-
-            return InkWell(
-
-              onTap: (){
-
-                items.selectItem(Item(
-                    images: items.items[index].images,
-                    body: items.items[index].body,
-                    title: items.items[index].title,
-                    favorite: items.items[index].favorite));
-
-                Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsScreen()));
-              },
-
-              child: SizedBox(child: Column(
-                children: [
-                  Image.file(items.items[index].images.first , height: 125, width: 200, fit: BoxFit.cover,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          return Stack(
+            children: [
+              InkWell(
+                onTap: () {
+                  items.selectItem(item);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DetailsScreen()),
+                  );
+                },
+                child: SizedBox(
+                  child: Column(
                     children: [
-                      Text(items.items[index].title),
-                      FavoriteWidget(index: items.items.indexOf(items.items[index]))
-                      /*IconButton(onPressed: (){
-                        Provider.of<FavoriteModel>(context, listen: false).add(items.items[index]);
-
-                      }, icon: Icon(Icons.favorite))*/
-                    ],)
-                ],
+                      Image.file(
+                        item.images.first,
+                        height: 125,
+                        width: 200,
+                        fit: BoxFit.cover,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(item.title),
+                          FavoriteWidget(index: index),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: IconButton(
+                  icon: Icon(Icons.remove_circle, color: Colors.red),
+                  onPressed: () {
+                    items.removeItem(item);
+                    favs.remove(item); // Optional, for double safety
+                  },
+                ),
               ),
-            );
-          }),
-
-
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => AddItemScreen()));
-      }, child: Icon(Icons.add_a_photo),),
+            ],
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddItemScreen()));
+        },
+        child: Icon(Icons.add_a_photo),
+      ),
     );
   }
 }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../profile/profile_page/profile_screen.dart';
-import '../profile/user_model.dart';
+
+import '../user/user_view_model.dart';
 import 'favorite_model.dart';
 
 class FavoriteScreen extends StatelessWidget {
@@ -11,7 +12,7 @@ class FavoriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final profileImage= Provider.of<UserModel>(context).user?.image;
+    final profileImage= Provider.of<UserViewModel>(context).user?.image;
     final favs= Provider.of<FavoriteModel>(context);
 
     return  Scaffold(
@@ -46,7 +47,7 @@ class FavoriteScreen extends StatelessWidget {
       ),
 
       body: Consumer<FavoriteModel>(
-          child: Text("no items found"),
+          child: Text("No items found"),
 
 
 
@@ -91,7 +92,10 @@ class FavoriteScreen extends StatelessWidget {
               ;
             }
             else{
-              return child!;
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: child!,
+              );
             }}
 
       ),

@@ -1,8 +1,9 @@
 import 'package:firstproject/add_item/item.dart';
-import 'package:firstproject/profile/user_model.dart';
+
 import 'package:flutter/material.dart';
 import '../../add_item/add_item_screen.dart';
 import '../../profile/profile_page/profile_screen.dart';
+import '../../user/user_view_model.dart';
 import '../details_widget/favorite_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:firstproject/add_item/item_model.dart';
@@ -19,7 +20,7 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profileImage= Provider.of<UserModel>(context).user?.image;
+    final profileImage= Provider.of<UserViewModel>(context).user?.image;
     final items= Provider.of<ItemModel>(context);
     return Scaffold(
       appBar: AppBar(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'LoginViewModel.dart';
+import 'package:firstproject/user/user_view_model.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,10 +11,14 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  String? _email;
+  String? _password;
+  String? _errorMessage;
+  bool _obscurePassword = true;  // For toggling password visibility
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<LoginViewModel>(context);
+    final userVM = Provider.of<UserViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(title: const Text("Login")),
@@ -24,37 +28,95 @@ class _LoginScreenState extends State<LoginScreen> {
           key: _formKey,
           child: Column(
             children: [
+              if (_errorMessage != null) ...[
+                Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
+                const SizedBox(height: 12),
+              ],
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Email'),
-                onChanged: viewModel.updateEmail,
-                validator: (value) => value!.contains('@') ? null : 'Enter valid email',
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey, width: 2),
+                  ),
+                ),
+                keyboardType: TextInputType.emailAddress,
+                onChanged: (value) {
+                  _email = value.trim();
+                  userVM.updateEmail(value.trim());
+                },
+                validator: (value) =>
+                value != null && value.contains('@') ? null : 'Enter valid email',
               ),
+              const SizedBox(height: 16),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                onChanged: viewModel.updatePassword,
-                validator: (value) => value!.length < 6 ? 'Password too short' : null,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: const OutlineInputBorder(),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey, width: 2),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                  ),
+                ),
+                obscureText: _obscurePassword,
+                onChanged: (value) {
+                  _password = value;
+                  userVM.updatePassword(value);
+                },
+                validator: (value) =>
+                value != null && value.length >= 6 ? null : 'Password too short',
               ),
-              const SizedBox(height: 20),
-              viewModel.isLoading
+              const SizedBox(height: 24),
+              userVM.isLoading
                   ? const CircularProgressIndicator()
                   : ElevatedButton(
                 onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    final error = await viewModel.login(context);
-                    if (error != null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(error)),
-                      );
-                    }
+                  if (!_formKey.currentState!.validate()) return;
+
+                  setState(() {
+                    _errorMessage = null;
+                  });
+
+                  final error = await userVM.login(_email, _password, context);
+
+                  if (error != null) {
+                    setState(() {
+                      _errorMessage = error;
+                    });
                   }
                 },
-                child: const Text("Login"),
+                child: const Text('Login'),
               ),
+              const SizedBox(height: 16),
+
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/signup'); // Or use MaterialPageRoute if you're not using named routes
+                },
+                child: const Text(
+                  "Don't have an account? Sign up",
+                  style: TextStyle(color: Colors.blue),
+                ),
+              ),
+
             ],
           ),
         ),
+
       ),
+
     );
   }
 }
+
+
+

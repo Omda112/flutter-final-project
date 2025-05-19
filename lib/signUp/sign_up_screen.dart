@@ -21,7 +21,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final viewModel = Provider.of<UserViewModel>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Sign Up")),
+      appBar: AppBar(title: const Text("Sign Up",style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold,))),
       body: viewModel.isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(

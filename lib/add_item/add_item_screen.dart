@@ -6,6 +6,7 @@ import 'package:firstproject/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -175,23 +176,29 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.save),
-          onPressed: () {
-            final item = Provider.of<ItemModel>(context , listen: false);
-            item.addItem(Item(
+          onPressed: () async {
+            final prefs = await SharedPreferences.getInstance();
+            String? userEmail = prefs.getString('user_email');
+
+            if (userEmail != null) {
+              final item = Provider.of<ItemModel>(context, listen: false);
+              item.addItem(Item(
                 images: List.from(item.selectedImage!),
                 body: body.text,
                 title: title.text,
-                favorite: false));
+                favorite: false,
+                ownerEmail: userEmail, // set owner
+              ));
 
-            item.selectedImage!.clear();
+              item.selectedImage!.clear();
 
-            Navigator.push(
+              Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => DashboardScreen()
-                )
-            ); //Navigator
-          } //onPressed
+                MaterialPageRoute(builder: (context) => DashboardScreen()),
+              );
+            }
+          }
+
 
       ),
     );

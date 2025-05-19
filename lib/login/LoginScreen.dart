@@ -21,7 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final userVM = Provider.of<UserViewModel>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
+      appBar: AppBar(title: const Text("Login",style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold,),
+      ),automaticallyImplyLeading: false),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(

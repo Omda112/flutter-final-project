@@ -14,6 +14,11 @@ class ItemModel extends ChangeNotifier {
   List<Item> _favorites = [];
   List<Item> get favorites => _favorites;
 
+  List<Item> getUserItems(String userEmail) {
+    return _items.where((item) => item.ownerEmail == userEmail).toList();
+  }
+
+
   void addItem(Item item) {
     _items.add(item);
     notifyListeners();

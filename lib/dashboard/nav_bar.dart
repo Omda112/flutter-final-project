@@ -3,7 +3,6 @@ import 'package:firstproject/favorite/favorite_screen.dart';
 import 'package:firstproject/profile/profile_page/profile_screen.dart';
 import 'package:firstproject/quote/quote_screen.dart';
 import 'package:firstproject/signUp/sign_up_screen.dart';
-import 'package:firstproject/task/task_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavBar extends StatefulWidget {

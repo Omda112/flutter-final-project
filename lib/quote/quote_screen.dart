@@ -36,7 +36,7 @@ class _QuoteScreenState extends State<QuoteScreen> {
     child: FutureBuilder(future: future, builder: (context , snapshot)
     {
       if(snapshot.hasData) {
-        ListView.builder(
+        return ListView.builder(
           itemCount: snapshot.data!.length,
           itemBuilder: (context, index) =>
               Padding(

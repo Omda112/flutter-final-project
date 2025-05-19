@@ -16,10 +16,24 @@ class UserViewModel extends ChangeNotifier {
   bool isLoading = false;
 
   // Load user data from SharedPreferences
+  // Future<void> loadUserData() async {
+  //   _user = await UserModel.fromPrefs();
+  //   notifyListeners();
+  // }
   Future<void> loadUserData() async {
     _user = await UserModel.fromPrefs();
+
+    if (_user != null) {
+      final prefs = await SharedPreferences.getInstance();
+      final imagePath = prefs.getString('user_image_path');
+      if (imagePath != null && imagePath.isNotEmpty) {
+        _user!.image = File(imagePath);
+      }
+    }
+
     notifyListeners();
   }
+
 
   // Sign up new user
   Future<void> signUp(String name, String email, String password, BuildContext context) async {
@@ -73,6 +87,7 @@ class UserViewModel extends ChangeNotifier {
   Future<void> logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('is_logged_in', false);
+    await prefs.remove('user_image_path');    // <--- ADD THIS LINE
     _user = null;
     notifyListeners();
     Navigator.pushReplacementNamed(context, '/login');

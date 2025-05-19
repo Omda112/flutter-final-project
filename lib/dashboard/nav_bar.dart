@@ -24,9 +24,9 @@ class _NavBarState extends State<NavBar> {
         DashboardScreen(),
         QuoteScreen(),
         FavoriteScreen(),
-        ProfilePage(),
-        SignUpScreen(),
-      ][_selectedIndex],
+        ProfilePage()
+      ]
+      [_selectedIndex],
 
       bottomNavigationBar: NavigationBar(
 

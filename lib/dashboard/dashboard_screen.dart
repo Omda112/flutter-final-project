@@ -88,12 +88,20 @@ class DashboardScreen extends StatelessWidget {
                       child: SizedBox(
                         child: Column(
                           children: [
-                            Image.file(
+                            item.images.isNotEmpty
+                                ? Image.file(
                               item.images.first,
                               height: 125,
                               width: 200,
                               fit: BoxFit.cover,
+                            )
+                                : Container(
+                              height: 125,
+                              width: 200,
+                              color: Colors.grey.shade300,
+                              child: Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                             ),
+
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

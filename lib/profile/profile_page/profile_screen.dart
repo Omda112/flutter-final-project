@@ -2,6 +2,7 @@ import 'package:firstproject/user/user_view_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../dark_theme/theme_provider.dart';
 import '../profile_widget/options.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -91,17 +92,31 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 Text(userModel.user?.email ?? "No Email", style: const TextStyle(fontSize: 20)),
 
-                const SizedBox(height: 40),
+                const SizedBox(height: 20),
+
+// 🌙 Dark Mode Toggle
+                Consumer<ThemeProvider>(
+                  builder: (context, themeProvider, _) {
+                    return SwitchListTile(
+                      title: const Text("Dark Mode"),
+                      value: themeProvider.themeMode == ThemeMode.dark,
+                      onChanged: (value) => themeProvider.toggleTheme(value),
+                    );
+                  },
+                ),
+
+                const SizedBox(height: 20),
 
                 ElevatedButton.icon(
                   onPressed: () => userModel.logout(context),
                   icon: const Icon(Icons.logout , color: Colors.red,),
-                  label: const Text("Logout" ),
+                  label: const Text("Logout"),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    foregroundColor: Colors.red, // 👈 Changes the text & icon color
+                    foregroundColor: Colors.red,
                   ),
                 )
+
               ],
             ),
           ),

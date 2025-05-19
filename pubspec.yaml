@@ -72,6 +72,8 @@ flutter:
   assets:
       - assets/
       - assets/profile.jpeg
+      - assets/quote_bg_light.jpg
+      - assets/quote_bg_dark.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

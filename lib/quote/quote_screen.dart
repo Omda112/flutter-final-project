@@ -22,13 +22,17 @@ class _QuoteScreenState extends State<QuoteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgImage = isDark
+        ? 'assets/quote_bg_dark.jpg'
+        : 'assets/quote_bg_light.jpg';
     return  Scaffold(
       body:  Container(
         height: double.infinity,
         width: double.infinity,
         decoration: BoxDecoration(
         image: DecorationImage(
-        image: AssetImage("assets/backgrounddd.jpg"),
+        image: AssetImage(bgImage),
     fit: BoxFit.cover,
     )
     ),

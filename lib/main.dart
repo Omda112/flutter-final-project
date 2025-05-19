@@ -8,6 +8,7 @@ import 'package:firstproject/splash/splash_screen.dart'; // ⭐ Import splash sc
 import 'package:firstproject/user/user_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dark_theme/theme_provider.dart';
 
 import 'login/LoginScreen.dart';
 
@@ -20,6 +21,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => ItemModel()),
         ChangeNotifierProvider(create: (context) => FavoriteModel()),
         ChangeNotifierProvider(create: (context) => SplashViewModel()),  // إضافة ViewModel
+        ChangeNotifierProvider(create: (_) => ThemeProvider()), // -------------------------------------->>>>>>>>>>>>>>>>>
 
       ],
       child: const MyApp(),
@@ -32,8 +34,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);  //------------------------------------>>>>>>>>>>>>>>
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData.light(),  //------------------------------------>>>>>>>>>>>>>>
+      darkTheme: ThemeData.dark(), //------------------------------------>>>>>>>>>>>>>>
+      themeMode: themeProvider.themeMode, //------------------------------------>>>>>>>>>>>>>>
       initialRoute: '/', // 👈 Start with splash
       routes: {
         '/': (context) => const SplashScreen(),     // 🔄 Splash
